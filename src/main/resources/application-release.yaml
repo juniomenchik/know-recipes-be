@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: ${PORT:8080}
+
+k8s:
+  cluster-name: ${KUBERNETES_CLUSTER_NAME:localhost}
+  namespace: ${KUBERNETES_NAMESPACE:localhost}
+  pod-name: ${KUBERNETES_POD_NAME:localhost}
+
+# Configuração específica para desenvolvimento
+development:
+  flyway:
+    reset-on-start: true  # Controla se limpa automaticamente ao iniciar
