@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: know-recipes-be
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
+
+  flyway:
+    clean-disabled: false
+
+k8s:
+  cluster-name: ${KUBERNETES_CLUSTER_NAME:cluster_nao_encontrado}
+  namespace: ${KUBERNETES_NAMESPACE:pod_nao_encontrado}
+  pod-name: ${KUBERNETES_POD_NAME:pod_nao_encontrado}
