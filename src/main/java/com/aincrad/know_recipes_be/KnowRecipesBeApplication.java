@@ -17,7 +17,8 @@ public class KnowRecipesBeApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println(System.getenv("SPRING_DATASOURCE_URL"));
+		System.out.println(System.getenv("DATABASE_URL"));
+		System.out.println(System.getenv("SPRING_PROFILES_ACTIVE"));
 	}
 
 }
