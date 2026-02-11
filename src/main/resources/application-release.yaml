@@ -8,14 +8,28 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
   flyway:
     enabled: true
+    clean-disabled: false  # Permite o comando clean
     baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+    # Configurações adicionais para desenvolvimento
+    clean-on-validation-error: true  # Limpa se houver erro na validação
+    out-of-order: true  # Permite executar migrações fora de ordem
+    placeholder-replacement: false  # Desabilita placeholders para evitar erros
+    # Para testes/desenvolvimento:
+    ignore-migration-patterns: '*:pending'  # Ignora migrações pendentes em alguns cenários
+
+logging:
+  level:
+    org.flywaydb: DEBUG
+
 
 server:
   port: ${PORT:8080}
