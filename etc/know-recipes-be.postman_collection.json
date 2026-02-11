@@ -1,0 +1,1594 @@
+{
+  "info": {
+    "_postman_id": "1f6b8fab-7418-4f2a-96ce-6f68dfa56bb2",
+    "name": "Know Recipes API - Complete Collection",
+    "description": "Coleção completa da API Know Recipes com autenticação JWT automática, todos os endpoints de Auth e Recipe, incluindo testes de validação e segurança.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "16001297",
+    "_collection_link": "https://go.postman.co/collection/16001297-1f6b8fab-7418-4f2a-96ce-6f68dfa56bb2?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "item": [
+        {
+          "name": "1. Registrar Novo Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('bearerToken', jsonData.token);",
+                  "    pm.collectionVariables.set('userId', jsonData.userId);",
+                  "    pm.collectionVariables.set('userEmail', jsonData.email);",
+                  "    console.log('Token salvo:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"maria_silva\",\n  \"email\": \"maria@email.com\",\n  \"password\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registra um novo usuário no sistema. Token JWT é salvo automaticamente na variável de coleção."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Registrar Outro Usuário (Teste Permissões)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('otherUserToken', jsonData.token);",
+                  "    pm.collectionVariables.set('otherUserId', jsonData.userId);",
+                  "    console.log('Token do outro usuário salvo:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"joao_teste\",\n  \"email\": \"joao@email.com\",\n  \"password\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registra um segundo usuário para testar permissões (não pode editar receitas de outros)."
+          },
+          "response": []
+        },
+        {
+          "name": "3. Login com Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('bearerToken', jsonData.token);",
+                  "    pm.collectionVariables.set('userId', jsonData.userId);",
+                  "    pm.collectionVariables.set('userEmail', jsonData.email);",
+                  "    console.log('Token admin salvo:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@knowrecipes.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Login com usuário de teste pré-cadastrado (admin). Token salvo automaticamente."
+          },
+          "response": []
+        },
+        {
+          "name": "4. Login com Jeff",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('bearerToken', jsonData.token);",
+                  "    pm.collectionVariables.set('userId', jsonData.userId);",
+                  "    console.log('Token jeff salvo:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jeff@knowrecipes.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Login com Guest",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('bearerToken', jsonData.token);",
+                  "    pm.collectionVariables.set('userId', jsonData.userId);",
+                  "    console.log('Token guest salvo:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"guest@knowrecipes.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. ❌ Login Senha Incorreta (deve falhar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@knowrecipes.com\",\n  \"password\": \"senhaerrada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Teste de validação: deve retornar 401 Unauthorized"
+          },
+          "response": []
+        },
+        {
+          "name": "7. ❌ Registro Email Duplicado (deve falhar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"outro_admin\",\n  \"email\": \"admin@knowrecipes.com\",\n  \"password\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Teste de validação: email já existe, deve retornar 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "8. ❌ Registro Username Duplicado (deve falhar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"email\": \"novoemail@email.com\",\n  \"password\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Teste de validação: username já existe, deve retornar 400 Bad Request"
+          },
+          "response": []
+        },
+        {
+          "name": "9. ❌ Senha Muito Curta (deve falhar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"teste\",\n  \"email\": \"teste@email.com\",\n  \"password\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Teste de validação: senha com menos de 6 caracteres, deve retornar 400"
+          },
+          "response": []
+        },
+        {
+          "name": "10. ❌ Email Inválido (deve falhar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"teste\",\n  \"email\": \"emailinvalido\",\n  \"password\": \"senha123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Teste de validação: formato de email inválido, deve retornar 400"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📚 Recipes - Public (No Auth)",
+      "item": [
+        {
+          "name": "11. Feed Principal (10 receitas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/public/feed",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "public",
+                "feed"
+              ]
+            },
+            "description": "Retorna as 10 receitas públicas mais recentes (feed principal)"
+          },
+          "response": []
+        },
+        {
+          "name": "12. Listar Todas (Página 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/public?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Lista receitas públicas com paginação (página 1, 20 itens)"
+          },
+          "response": []
+        },
+        {
+          "name": "13. Listar Todas (Página 2)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/public?page=1&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Lista receitas públicas - página 2"
+          },
+          "response": []
+        },
+        {
+          "name": "14. Listar (5 por página)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/public?page=0&size=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            },
+            "description": "Lista receitas com tamanho de página customizado (5 itens)"
+          },
+          "response": []
+        },
+        {
+          "name": "15. Buscar: \"automática\"",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/search/public?q=automática",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "search",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "automática"
+                }
+              ]
+            },
+            "description": "Busca receitas públicas por palavra-chave (case-insensitive)"
+          },
+          "response": []
+        },
+        {
+          "name": "16. Buscar: \"misture\"",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/search/public?q=misture",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "search",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "misture"
+                }
+              ]
+            },
+            "description": "Busca na descrição das receitas"
+          },
+          "response": []
+        },
+        {
+          "name": "17. Buscar: \"chocolate\"",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/search/public?q=chocolate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "search",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "chocolate"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "18. Buscar com Paginação",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "\r",
+                  "\r",
+                  "// Tenta parsear o JSON\r",
+                  "let jsonData;\r",
+                  "try {\r",
+                  "    jsonData = pm.response.json();\r",
+                  "} catch (e) {\r",
+                  "    pm.test(\"Resposta é um JSON válido\", function () {\r",
+                  "        throw new Error(\"Resposta não é JSON válido\");\r",
+                  "    });\r",
+                  "}\r",
+                  "\r",
+                  "\r",
+                  "// Pega o primeiro item do array e salva o uniqueId\r",
+                  "if (jsonData && Array.isArray(jsonData.content) && jsonData.content.length > 0) {\r",
+                  "    const firstItem = jsonData.content[0];\r",
+                  "\r",
+                  "    pm.test(\"Primeiro item possui 'uniqueId'\", function () {\r",
+                  "        pm.expect(firstItem).to.have.property(\"uniqueId\");\r",
+                  "    });\r",
+                  "\r",
+                  "    if (firstItem.uniqueId) {\r",
+                  "        pm.collectionVariables.set(\"uniqueId\", firstItem.uniqueId);\r",
+                  "        pm.collectionVariables.set(\"recipeId\", firstItem.id);\r",
+                  "    }\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/search/public?q=receita&page=0&size=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "search",
+                "public"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "receita"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "19. Buscar por UniqueId",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Para usar: primeiro execute 'Feed Principal' e copie um uniqueId",
+                  "// Ou defina manualmente: pm.collectionVariables.set('recipeUniqueId', 'seu-uuid-aqui');"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/public/unique/{{uniqueId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "public",
+                "unique",
+                "{{uniqueId}}"
+              ]
+            },
+            "description": "Busca receita específica por uniqueId (para compartilhamento)"
+          },
+          "response": []
+        },
+        {
+          "name": "20. Buscar por ID (público)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/public/{{recipeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "public",
+                "{{recipeId}}"
+              ]
+            },
+            "description": "Busca receita pública por ID (não precisa autenticação)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔒 Recipes - Protected (Auth Required)",
+      "item": [
+        {
+          "name": "21. Criar Receita Pública",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('lastCreatedRecipeId', jsonData.id);",
+                  "    pm.collectionVariables.set('recipeUniqueId', jsonData.uniqueId);",
+                  "    console.log('Receita criada com ID:', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Brigadeiro Gourmet\",\n  \"description\": \"Ingredientes:\\n- 1 lata de leite condensado\\n- 1 colher de sopa de manteiga\\n- 3 colheres de sopa de chocolate em pó\\n\\nModo de Preparo:\\n1. Misture todos os ingredientes\\n2. Leve ao fogo baixo\\n3. Mexa sem parar até soltar do fundo\\n4. Deixe esfriar e enrole\",\n  \"imageUrl\": \"https://picsum.photos/seed/brigadeiro/600/400\",\n  \"isPrivate\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes"
+              ]
+            },
+            "description": "Cria nova receita pública. ID salvo automaticamente em variável."
+          },
+          "response": []
+        },
+        {
+          "name": "22. Criar Receita Privada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('privateRecipeId', jsonData.id);",
+                  "    console.log('Receita privada criada com ID:', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Receita Secreta da Família\",\n  \"description\": \"Esta é uma receita privada que só eu posso ver.\",\n  \"imageUrl\": \"https://picsum.photos/seed/secreto/600/400\",\n  \"isPrivate\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes"
+              ]
+            },
+            "description": "Cria receita privada (apenas autor pode ver)"
+          },
+          "response": []
+        },
+        {
+          "name": "23. Criar Bolo de Cenoura",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Bolo de Cenoura com Cobertura de Chocolate\",\n  \"description\": \"Ingredientes:\\n- 3 cenouras médias\\n- 3 ovos\\n- 1 xícara de óleo\\n- 2 xícaras de açúcar\\n- 2 xícaras de farinha de trigo\\n- 1 colher de sopa de fermento\\n\\nCobertura:\\n- 1 lata de leite condensado\\n- 3 colheres de chocolate em pó\\n- 1 colher de manteiga\",\n  \"imageUrl\": \"https://picsum.photos/seed/cenoura/600/400\",\n  \"isPrivate\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "24. Criar Receita sem Imagem",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Arroz Simples\",\n  \"description\": \"1. Lave o arroz\\n2. Coloque água (2:1)\\n3. Cozinhe por 15 minutos\",\n  \"isPrivate\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes"
+              ]
+            },
+            "description": "Receita sem URL de imagem (campo opcional)"
+          },
+          "response": []
+        },
+        {
+          "name": "25. Atualizar Receita",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Brigadeiro Gourmet Atualizado\",\n  \"description\": \"Receita melhorada com dicas especiais!\",\n  \"imageUrl\": \"https://picsum.photos/seed/brigadeiro2/600/400\",\n  \"isPrivate\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/{{lastCreatedRecipeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "{{lastCreatedRecipeId}}"
+              ]
+            },
+            "description": "Atualiza receita criada anteriormente (usa variável lastCreatedRecipeId)"
+          },
+          "response": []
+        },
+        {
+          "name": "26. Tornar Receita Privada",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Brigadeiro Gourmet\",\n  \"description\": \"Agora esta receita é privada!\",\n  \"isPrivate\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/{{lastCreatedRecipeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "{{lastCreatedRecipeId}}"
+              ]
+            },
+            "description": "Altera visibilidade da receita para privada"
+          },
+          "response": []
+        },
+        {
+          "name": "27. Buscar Receita por ID (autenticado)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/{{lastCreatedRecipeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "{{lastCreatedRecipeId}}"
+              ]
+            },
+            "description": "Busca receita (incluindo privadas se for o autor)"
+          },
+          "response": []
+        },
+        {
+          "name": "28. Listar Minhas Receitas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/my?page=0&size=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "my"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Lista todas as receitas do usuário autenticado (públicas e privadas)"
+          },
+          "response": []
+        },
+        {
+          "name": "29. Listar Minhas Receitas (Página 2)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/my?page=1&size=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "my"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "size",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "30. Buscar nas Minhas: \"brigadeiro\"",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/search/my?q=brigadeiro",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "search",
+                "my"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "brigadeiro"
+                }
+              ]
+            },
+            "description": "Busca nas receitas do usuário autenticado"
+          },
+          "response": []
+        },
+        {
+          "name": "31. Buscar nas Minhas: \"bolo\"",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/search/my?q=bolo&page=0&size=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "search",
+                "my"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "bolo"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "32. Ver Minhas Estatísticas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/my/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "my",
+                "stats"
+              ]
+            },
+            "description": "Retorna estatísticas do usuário (total de receitas)"
+          },
+          "response": []
+        },
+        {
+          "name": "33. Deletar Receita",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/{{lastCreatedRecipeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "{{lastCreatedRecipeId}}"
+              ]
+            },
+            "description": "Deleta receita (apenas autor pode deletar). Retorna 204 No Content."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Security Tests",
+      "item": [
+        {
+          "name": "34. ❌ Criar sem Token (deve falhar)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Sem autenticação\",\n  \"description\": \"Não deve funcionar\",\n  \"isPrivate\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes"
+              ]
+            },
+            "description": "Deve retornar 401/403 - Tentativa de criar receita sem autenticação"
+          },
+          "response": []
+        },
+        {
+          "name": "35. ❌ Minhas Receitas sem Token (deve falhar)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "my"
+              ]
+            },
+            "description": "Deve retornar 401/403 - Endpoint protegido sem token"
+          },
+          "response": []
+        },
+        {
+          "name": "36. ❌ Token Inválido (deve falhar)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "token_invalido_12345",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/my",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "my"
+              ]
+            },
+            "description": "Deve retornar 401 - Token JWT inválido"
+          },
+          "response": []
+        },
+        {
+          "name": "37. ❌ Editar Receita de Outro (deve falhar)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{otherUserToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Tentando hackear\",\n  \"description\": \"Não deve funcionar!\",\n  \"isPrivate\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "1"
+              ]
+            },
+            "description": "Deve retornar 403 - Tentativa de editar receita de outro usuário"
+          },
+          "response": []
+        },
+        {
+          "name": "38. ❌ Deletar Receita de Outro (deve falhar)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{otherUserToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "1"
+              ]
+            },
+            "description": "Deve retornar 403 - Tentativa de deletar receita de outro usuário"
+          },
+          "response": []
+        },
+        {
+          "name": "39. ❌ Ver Receita Privada de Outro (deve falhar)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{otherUserToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recipes/{{privateRecipeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "recipes",
+                "{{privateRecipeId}}"
+              ]
+            },
+            "description": "Deve retornar 403/404 - Receita privada só visível para o autor"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script executado ANTES de cada requisição",
+          "// Útil para debug do token",
+          "const token = pm.collectionVariables.get('bearerToken');",
+          "if (token) {",
+          "    console.log('Token JWT ativo:', token.substring(0, 20) + '...');",
+          "} else {",
+          "    console.log('⚠️ Nenhum token JWT salvo. Execute um endpoint de Login primeiro!');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script executado APÓS cada requisição",
+          "// Log do status da resposta",
+          "console.log('Status:', pm.response.code, pm.response.status);"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "default"
+    },
+    {
+      "key": "bearerToken",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "userEmail",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "otherUserToken",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "otherUserId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "lastCreatedRecipeId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "privateRecipeId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "recipeUniqueId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "uniqueId",
+      "value": ""
+    },
+    {
+      "key": "recipeId",
+      "value": ""
+    }
+  ]
+}

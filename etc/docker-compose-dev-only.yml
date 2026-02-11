@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: recipes-postgres-dev
+    environment:
+      POSTGRES_DB: recipes_db
+      POSTGRES_USER: recipes_manager
+      POSTGRES_PASSWORD: Password123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Scripts de inicialização (opcional)
+      # - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - recipes-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U recipes_manager -d recipes_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin - Interface Web para PostgreSQL
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: recipes-pgadmin-dev
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@knowrecipes.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    networks:
+      - recipes-network
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+
+networks:
+  recipes-network:
+    driver: bridge
+
+# Para desenvolvimento, rode o Spring Boot localmente com:
+# mvn spring-boot:run -Dspring-boot.run.profiles=local
+# 
+# Vantagens:
+# - Hot reload automático
+# - Debug mais fácil
+# - Rebuild mais rápido
+# - Logs direto no terminal
+#
+# Conexão com o banco:
+# - Host: localhost
+# - Port: 5432
+# - Database: recipes_db
+# - Username: recipes_manager
+# - Password: Password123

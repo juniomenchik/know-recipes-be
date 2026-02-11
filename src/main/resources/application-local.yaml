@@ -1,0 +1,41 @@
+# src/main/resources/application-local.yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://host.docker.internal:5432/recipes_db
+    username: recipes_manager
+    password: Password123
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update  # Importante: usar validate ou none com Flyway
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    clean-disabled: false  # Permite o comando clean
+    baseline-on-migrate: true
+    baseline-version: 0
+    locations: classpath:db/migration
+    # Configurações adicionais para desenvolvimento
+    clean-on-validation-error: true  # Limpa se houver erro na validação
+    out-of-order: true  # Permite executar migrações fora de ordem
+    placeholder-replacement: false  # Desabilita placeholders para evitar erros
+    # Para testes/desenvolvimento:
+    ignore-migration-patterns: '*:pending'  # Ignora migrações pendentes em alguns cenários
+
+server:
+  port: 8080
+
+k8s:
+  cluster-name: ${KUBERNETES_CLUSTER_NAME:localhost}
+  namespace: ${KUBERNETES_NAMESPACE:localhost}
+  pod-name: ${KUBERNETES_POD_NAME:localhost}
+
+# Configuração específica para desenvolvimento
+development:
+  flyway:
+    reset-on-start: true  # Controla se limpa automaticamente ao iniciar
