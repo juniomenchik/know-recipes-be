@@ -32,7 +32,7 @@ public class Recipe {
     @Column(nullable = false, length = 200)
     private String title;
 
-    @Column(columnDefinition = "CLOB")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "image_url", length = 500)
